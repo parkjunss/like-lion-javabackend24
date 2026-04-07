@@ -26,6 +26,11 @@ public class PrimitiveCastExam {
         double pi = 3.1415926535897932384626; // double 리터럴이 아닌 float 리터럴로 선언
         System.out.printf("pi as double: %.2f%n", pi);
 
+        // asci code to int
+        char ch = 'A';
+        int ascii = ch; // char -> int (자동 형변환)
+        System.out.println("ASCII value of 'A': " + ascii);
+
 
 
 

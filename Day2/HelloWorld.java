@@ -13,5 +13,8 @@ public class HelloWorld {
         myCar.printInfo(); // 객체의 메서드 호출
         myCar.start(); // 객체의 메서드 호출    
         myCar.stop(); // 객체의 메서드 호출
+
+        //유저로부터 입력 받기
+
     }
 }
