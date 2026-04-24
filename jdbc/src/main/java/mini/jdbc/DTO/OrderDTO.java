@@ -7,7 +7,6 @@ public class OrderDTO {
     private ProductDTO productDTO;
     private UserDTO userDTO;
     private double orderPrice;
-    private int orderQty;
     private LocalDateTime orderDate;
 
     @Override
@@ -17,7 +16,6 @@ public class OrderDTO {
                 ", productDTO=" + productDTO +
                 ", userDTO=" + userDTO +
                 ", orderPrice=" + orderPrice +
-                ", orderQty=" + orderQty +
                 ", orderDate=" + orderDate +
                 '}';
     }
@@ -52,14 +50,6 @@ public class OrderDTO {
 
     public void setOrderPrice(double orderPrice) {
         this.orderPrice = orderPrice;
-    }
-
-    public int getOrderQty() {
-        return orderQty;
-    }
-
-    public void setOrderQty(int orderQty) {
-        this.orderQty = orderQty;
     }
 
     public LocalDateTime getOrderDate() {
