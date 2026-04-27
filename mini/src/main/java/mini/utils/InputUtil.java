@@ -27,7 +27,7 @@ public class InputUtil {
                 String input = sc.nextLine();
                 return Integer.parseInt(input);
             } catch (NumberFormatException e) {
-                System.out.println("[오류] 숫자(정수)만 입력 가능합니다. 다시 입력해주세요.");
+                System.out.println("[오류] 숫자만 입력 가능합니다. 다시 입력해주세요.");
             }
         }
     }
@@ -39,7 +39,7 @@ public class InputUtil {
                 String input = sc.nextLine();
                 return Double.parseDouble(input);
             } catch (NumberFormatException e) {
-                System.out.println("[오류] 숫자(실수)만 입력 가능합니다. 다시 입력해주세요.");
+                System.out.println("[오류] 숫자만 입력 가능합니다. 다시 입력해주세요.");
             }
         }
     }
