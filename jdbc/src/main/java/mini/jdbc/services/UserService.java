@@ -8,7 +8,11 @@ import java.util.Objects;
 
 public class UserService {
     private final SessionManager sessionManager = SessionManager.getInstance();
-    private final UserDAO userDAO = new UserDAO();
+    private final UserDAO userDAO;
+
+    public UserService(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
 
     public void registerUser(UserDTO userDTO) {
         if (userDAO.isUsernameExists(userDTO.getUsername())) {

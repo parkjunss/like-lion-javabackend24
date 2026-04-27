@@ -1,12 +1,13 @@
-package mini.jdbc.services;
+package mini.services;
 
-import mini.jdbc.DAO.ProductDAO;
-import mini.jdbc.DAO.UserDAO;
-import mini.jdbc.DAO.OrderDAO;
-import mini.jdbc.DTO.OrderDTO;
-import mini.jdbc.DTO.ProductDTO;
-import mini.jdbc.DTO.UserDTO;
-import mini.jdbc.utils.DBUtil;
+import mini.DAO.OrderDAO;
+import mini.DAO.ProductDAO;
+import mini.DAO.UserDAO;
+import mini.DTO.OrderDTO;
+import mini.DTO.ProductDTO;
+import mini.DTO.UserDTO;
+import mini.utils.AppException;
+import mini.utils.DBUtil;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -24,24 +25,23 @@ public class OrderService {
         this.orderDAO = orderDAO;
     }
 
-
     public UserDTO createOrderAndPay(UserDTO userDTO, ProductDTO productDTO, int orderCount) {
         double totalPrice = productDTO.getProductPrice() * orderCount;
+        if (productDTO.getUserDTO().getId() == userDTO.getId()) {
+            throw new AppException("[오류] 본인이 등록한 상품은 직접 구매할 수 없습니다.");
+        }
         if (userDTO.getBalance() < totalPrice) {
-            System.out.println("결제 실패: 잔액이 부족합니다.");
-            return null;
+            throw new AppException("결제 실패: 잔액이 부족합니다.");
         }
         if (productDTO.getQuantity() < orderCount) {
-            System.out.println("결제 실패: 재고가 부족합니다.");
-            return null;
+            throw new AppException("결제 실패: 재고가 부족합니다.");
         }
-
-        if (orderCount <= 0) return null;
+        if (orderCount <= 0){
+            throw new AppException("결제 실패: 주문 수량은 1 이상이어야 합니다.");
+        }
         if (productDTO.getProductPrice() < 0) {
-            System.out.println("시스템 오류: 상품 가격이 음수입니다.");
-            return null;
+            throw new AppException("시스템 오류: 상품 가격이 음수입니다.");
         }
-
         try (Connection conn = DBUtil.getConnection()) {
             try {
                 conn.setAutoCommit(false);
@@ -64,17 +64,14 @@ public class OrderService {
                 if (r3 == 0) throw new SQLException("주문 생성 실패: DB 업데이트 실패");
 
                 conn.commit();
-
-                return userDTO;
+                return userDAO.getUserById(userDTO.getId());
 
             } catch (Exception e) {
                 conn.rollback();
-                System.err.println("결제 취소됨 (롤백): " + e.getMessage());
-                return null;
+                throw new AppException("결제 취소됨 (롤백): " + e.getMessage());
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return null;
+            throw new AppException(e.getMessage());
         }
     }
 

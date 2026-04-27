@@ -7,7 +7,11 @@ import mini.jdbc.DTO.UserDTO;
 import java.util.List;
 
 public class ProductService {
-    private final ProductDAO productDAO = new ProductDAO();
+    private final ProductDAO productDAO;
+
+    public ProductService(ProductDAO productDAO) {
+        this.productDAO = productDAO;
+    }
 
     public void registerProduct(ProductDTO productDTO) {
         int result = productDAO.insertProduct(productDTO);

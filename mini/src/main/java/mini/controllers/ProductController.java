@@ -1,9 +1,10 @@
-package mini.jdbc.controllers;
+package mini.controllers;
 
-import mini.jdbc.DTO.ProductDTO;
-import mini.jdbc.DTO.UserDTO;
-import mini.jdbc.services.ProductService;
-import mini.jdbc.utils.SessionManager;
+import mini.DTO.ProductDTO;
+import mini.DTO.UserDTO;
+import mini.services.ProductService;
+import mini.utils.AppException;
+import mini.utils.SessionManager;
 
 import java.util.List;
 
@@ -16,10 +17,7 @@ public class ProductController {
         this.sessionManager = sessionManager;
     }
 
-    public ProductDTO getProduct(long productId) {
-        return productService.getProduct(productId);
-    }
-
+    public ProductDTO getProduct(long productId) { return productService.getProduct(productId); }
 
     public List<ProductDTO> showAllProducts() {
         return productService.getAllProducts();
@@ -29,63 +27,46 @@ public class ProductController {
         return productService.searchProducts(keyword);
     }
 
-
-    public void showMyProducts() {
+    public List<ProductDTO> getMyProducts() {
         UserDTO currentUser = sessionManager.getCurrentUser();
         if (currentUser == null) {
-            System.out.println("먼저 로그인 해주세요.");
-            return;
+            throw new AppException("[오류] 로그인이 필요합니다.");
         }
-        List<ProductDTO> list = productService.getMyProducts(currentUser);
-        System.out.println("\n[ 나의 상품 내역 ]");
-        if (list.isEmpty()) {
-            System.out.println("등록된 상품이 없습니다.");
-        } else {
-            for (ProductDTO p : list) {
-                System.out.println(p.getCreatedAt());
-                System.out.printf("상품ID: %d |상품명: %s |상품가격: %.0f |상품수량: %d |날짜: %s\n",
-                        p.getId(), p.getProductName(), p.getProductPrice(), p.getQuantity(), p.getCreatedAt());
-            }
-        }
+        return productService.getMyProducts(currentUser);
     }
 
     public void registerProduct(ProductDTO productDTO) {
         UserDTO currentUser = sessionManager.getCurrentUser();
         if (currentUser == null) {
-            System.out.println("로그인이 필요합니다.");
-            return;
+            throw new AppException("[오류] 로그인이 필요합니다.");
         }
         productDTO.setUserDTO(currentUser);
-        productService.registerProduct(productDTO);
+        productService.registerProduct(productDTO, currentUser);
     }
 
-    public boolean deleteProduct(long productId) {
+    public void deleteProduct(long productId) {
         UserDTO currentUser = sessionManager.getCurrentUser();
         if (currentUser == null) {
-            System.out.println("먼저 로그인 해주세요.");
-            return false;
+            throw new AppException("[오류] 로그인이 필요합니다.");
         }
-        if (productId == 0) return false;
+        if (productId == 0) throw new AppException("");
         ProductDTO productDTO = new ProductDTO();
         productDTO.setId(productId);
         productDTO.setUserDTO(currentUser);
-        return productService.deleteMyProduct(productDTO, currentUser.getId());
+        productService.deleteMyProduct(productDTO, currentUser.getId());
     }
 
-    private boolean validate(ProductDTO dto) {
+    private boolean validate(ProductDTO productDTO) {
         UserDTO currentUser = sessionManager.getCurrentUser();
-        if (currentUser == null || dto == null) return false;
-
-        return dto.getUserDTO().getId() == currentUser.getId();
+        if (currentUser == null || productDTO == null) return false;
+        return productDTO.getUserDTO().getId() == currentUser.getId();
     }
 
     private void processUpdate(ProductDTO productDTO) {
         if (validate(productDTO)) {
-            boolean success = productService.editProduct(productDTO);
-            if (success) System.out.println("[알림] 수정되었습니다.");
-            else System.out.println("[오류] 수정 실패.");
+            productService.editProduct(productDTO);
         } else {
-            System.out.println("[오류] 권한이 없거나 잘못된 접근입니다.");
+            throw new AppException("[오류] 권한이 없거나 잘못된 접근입니다.");
         }
     }
 

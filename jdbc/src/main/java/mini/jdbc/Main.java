@@ -1,6 +1,7 @@
 package mini.jdbc;
 
 import mini.jdbc.utils.InputUtil;
+import mini.jdbc.views.ConsoleView;
 
 public class Main {
     public static void main(String[] args) {
@@ -12,7 +13,6 @@ public class Main {
 
         while (isRunning) {
             if (!isLoggedIn) {
-                // 로그인 전 메뉴
                 System.out.println("\n1. 회원가입 | 2. 로그인 | 3. 종료");
                 int choice = InputUtil.readInt("선택");
 
@@ -21,12 +21,16 @@ public class Main {
                         view.getUserSignup();
                         break;
                     case 2:
-                        view.getUserLogin();
-                        isLoggedIn = view.sessionManager.isAuthenticated();
+                        try{
+                            view.getUserLogin();
+                        }catch(Exception e){
+                            System.out.println("[ 오류 ] 1, 2, 3 중에 하나를 입력하세요");
+                        }
+                        isLoggedIn = view.isLoggedIn();
                         if (isLoggedIn) {
-                            view.showMessage("로그인에 성공했습니다!");
+                            view.showMessage("로그인에 성공했습니다.");
                         } else {
-                            view.showMessage("로그인 실패! 아이디와 비밀번호를 확인하세요.");
+                            view.showMessage("로그인 실패. 아이디와 비밀번호를 확인하세요.");
                         }
                         break;
                     case 3:

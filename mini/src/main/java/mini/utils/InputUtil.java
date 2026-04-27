@@ -1,9 +1,10 @@
-package mini.jdbc.utils;
+package mini.utils;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class InputUtil {
-    public static Scanner sc = new Scanner(System.in);
+    public static Scanner sc = new Scanner(System.in, StandardCharsets.UTF_8);
 
     public static String readString(String msg) {
         System.out.print(msg + ": ");
@@ -26,7 +27,7 @@ public class InputUtil {
                 String input = sc.nextLine();
                 return Integer.parseInt(input);
             } catch (NumberFormatException e) {
-                System.out.println("[오류] 숫자(실수)만 입력 가능합니다. 다시 입력해주세요.");
+                System.out.println("[오류] 숫자(정수)만 입력 가능합니다. 다시 입력해주세요.");
             }
         }
     }

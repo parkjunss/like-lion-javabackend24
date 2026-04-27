@@ -9,8 +9,13 @@ import mini.jdbc.utils.InputUtil;
 import java.util.List;
 
 public class OrderView {
-    OrderController orderController = new OrderController();
-    UserController userController = new UserController();
+    private final OrderController orderController;
+    private final UserController userController;
+
+    public OrderView(OrderController orderController, UserController userController) {
+        this.orderController = orderController;
+        this.userController = userController;
+    }
 
     public void showMyOrders() {
         UserDTO currentUser = userController.getUser();

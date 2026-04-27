@@ -1,10 +1,11 @@
-package mini.jdbc.DAO;
+package mini.DAO;
 
-import mini.jdbc.utils.DBUtil;
-import mini.jdbc.DTO.OrderDTO;
-import mini.jdbc.DTO.ProductDTO;
-import mini.jdbc.DTO.UserDTO;
-import mini.jdbc.sqls.SqlQuery;
+import mini.DTO.OrderDTO;
+import mini.DTO.ProductDTO;
+import mini.DTO.UserDTO;
+import mini.sqls.SqlQuery;
+import mini.utils.AppException;
+import mini.utils.DBUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,8 +19,7 @@ public class OrderDAO {
 
     public int insertOrder(Connection conn, OrderDTO orderDTO) {
         if (orderDTO.getUserDTO() == null || orderDTO.getProductDTO() == null) {
-            System.out.println("오류: 유저 또는 상품 정보가 누락되었습니다.");
-            return 0;
+            throw new AppException("오류: 유저 또는 상품 정보가 누락되었습니다.");
         }
         try(PreparedStatement ps = conn.prepareStatement(SqlQuery.ORDER_INSERT)){
             ps.setLong(1, orderDTO.getUserDTO().getId());
@@ -27,9 +27,8 @@ public class OrderDAO {
             ps.setDouble(3, orderDTO.getOrderPrice());
             return ps.executeUpdate();
         } catch (SQLException e){
-            System.out.println(e.getMessage());
+            throw new AppException(e.getMessage());
         }
-        return 0;
     }
 
     public int deleteOrder(long orderId) {
@@ -38,9 +37,8 @@ public class OrderDAO {
             ps.setLong(1, orderId);
             return ps.executeUpdate();
         } catch (SQLException e){
-            System.out.println(e.getMessage());
+            throw new AppException(e.getMessage());
         }
-        return 0;
     }
 
     public OrderDTO mapResultSetToDTO(ResultSet rs) throws SQLException {
@@ -69,7 +67,7 @@ public class OrderDAO {
                 if (rs.next()) return mapResultSetToDTO(rs);
             }
         } catch (SQLException e){
-            System.out.println(e.getMessage());
+            throw new AppException(e.getMessage());
         }
         return null;
     }
@@ -85,7 +83,7 @@ public class OrderDAO {
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            throw new AppException(e.getMessage());
         }
         return list;
     }

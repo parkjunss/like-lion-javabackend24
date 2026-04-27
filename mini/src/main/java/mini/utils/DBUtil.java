@@ -1,4 +1,4 @@
-package mini.jdbc.utils;
+package mini.utils;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;

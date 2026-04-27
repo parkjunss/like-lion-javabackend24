@@ -1,18 +1,23 @@
-package mini.jdbc;
+package mini.views;
 
-import mini.jdbc.utils.SessionManager;
-import mini.jdbc.views.OrderView;
-import mini.jdbc.views.ProductView;
-import mini.jdbc.views.UserView;
+import mini.controllers.OrderController;
+import mini.controllers.ProductController;
+import mini.controllers.UserController;
+
 
 public class ConsoleView {
-    SessionManager sessionManager = SessionManager.getInstance();
-    UserView userView = new UserView();
-    ProductView productView = new ProductView();
-    OrderView orderView = new OrderView();
+    private final UserView userView;
+    private final ProductView productView;
+    private final OrderView orderView;
+
+    public ConsoleView(UserController userController, ProductController productController, OrderController orderController) {
+        this.userView = new UserView(userController);
+        this.productView = new ProductView(userController, productController, orderController);
+        this.orderView = new OrderView(orderController, userController);
+    }
 
     public void showMessage(String msg) {
-        System.out.println("[Info] " + msg);
+        System.out.println("[알림] " + msg);
     }
 
     public void getUserSignup() {
@@ -51,5 +56,8 @@ public class ConsoleView {
         orderView.showMyOrders();
     }
 
+    public boolean isLoggedIn() {
+        return userView.isAuthenticated();
+    }
 
 }

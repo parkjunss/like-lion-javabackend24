@@ -1,8 +1,9 @@
-package mini.jdbc.DAO;
+package mini.DAO;
 
-import mini.jdbc.utils.DBUtil;
-import mini.jdbc.DTO.UserDTO;
-import mini.jdbc.sqls.SqlQuery;
+import mini.DTO.UserDTO;
+import mini.sqls.SqlQuery;
+import mini.utils.AppException;
+import mini.utils.DBUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,17 +13,15 @@ import java.sql.SQLException;
 public class UserDAO {
 
     public int insertUser(UserDTO userDTO) {
-        int result = 0;
         try(Connection conn = DBUtil.getConnection();
             PreparedStatement ps = conn.prepareStatement(SqlQuery.USER_INSERT)){
             ps.setString(1, userDTO.getUsername());
             ps.setString(2, userDTO.getPassword());
             ps.setDouble(3, userDTO.getBalance());
-            result = ps.executeUpdate();
+            return ps.executeUpdate();
         } catch (SQLException e){
-            System.out.println(e.getMessage());
+            throw new AppException(e.getMessage());
         }
-        return result;
     }
 
     public boolean isUsernameExists(String username) {
@@ -35,27 +34,22 @@ public class UserDAO {
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            throw new AppException(e.getMessage());
         }
         return false;
     }
 
     public int updateUser(UserDTO userDTO) {
-        int result = 0;
         try(Connection conn = DBUtil.getConnection();
             PreparedStatement ps = conn.prepareStatement(SqlQuery.USER_UPDATE_ALL)){
             ps.setString(1, userDTO.getUsername());
             ps.setString(2, userDTO.getPassword());
             ps.setDouble(3, userDTO.getBalance());
             ps.setLong(4, userDTO.getId());
-            result = ps.executeUpdate();
-            if (result == 0) {
-                System.out.println("경고: 업데이트된 유저가 없습니다. (ID 확인 필요)");
-            }
+            return ps.executeUpdate();
         } catch (SQLException e){
-            System.out.println(e.getMessage());
+            throw new AppException(e.getMessage());
         }
-        return result;
     }
 
     public int updateUsername(long userId, String newUsername) {
@@ -65,9 +59,8 @@ public class UserDAO {
             ps.setLong(2, userId);
             return ps.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            throw new AppException(e.getMessage());
         }
-        return 0;
     }
 
     public int updatePassword(long userId, String newPassword) {
@@ -77,9 +70,8 @@ public class UserDAO {
             ps.setLong(2, userId);
             return ps.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            throw new AppException(e.getMessage());
         }
-        return 0;
     }
 
     public int updateBalance(long userId, double newBalance) {
@@ -89,9 +81,8 @@ public class UserDAO {
             ps.setLong(2, userId);
             return ps.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            throw new AppException(e.getMessage());
         }
-        return 0;
     }
 
     public int updateBalance(Connection conn, long userId, double amount) throws SQLException {
@@ -99,16 +90,18 @@ public class UserDAO {
             ps.setDouble(1, amount);
             ps.setLong(2, userId);
             return ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new AppException(e.getMessage());
         }
     }
 
-    public void deleteUser(long id) {
+    public int deleteUser(long id) {
         try(Connection conn = DBUtil.getConnection();
             PreparedStatement ps = conn.prepareStatement(SqlQuery.USER_DELETE)){
             ps.setLong(1, id);
-            ps.executeUpdate();
+            return ps.executeUpdate();
         } catch (SQLException e){
-            System.out.println(e.getMessage());
+            throw new AppException(e.getMessage());
         }
     }
 
@@ -127,7 +120,7 @@ public class UserDAO {
                 }
             }
         } catch (SQLException e){
-            System.out.println(e.getMessage());
+            throw new AppException(e.getMessage());
         }
         return null;
     }
@@ -147,7 +140,7 @@ public class UserDAO {
                 }
             }
         } catch (SQLException e){
-            System.out.println(e.getMessage());
+            throw new AppException(e.getMessage());
         }
         return null;
     }

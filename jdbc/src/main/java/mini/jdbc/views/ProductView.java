@@ -10,9 +10,15 @@ import mini.jdbc.utils.InputUtil;
 import java.util.List;
 
 public class ProductView {
-    UserController userController = new UserController();
-    ProductController productController = new ProductController();
-    OrderController orderController = new OrderController();
+    private final UserController userController;
+    private final ProductController productController;
+    private final OrderController orderController;
+
+    public ProductView(UserController userController, ProductController productController, OrderController orderController) {
+        this.userController = userController;
+        this.productController = productController;
+        this.orderController = orderController;
+    }
 
     private void displayAndHandleProductList(List<ProductDTO> productList, String title) {
         System.out.println("\n[" + title + "]");

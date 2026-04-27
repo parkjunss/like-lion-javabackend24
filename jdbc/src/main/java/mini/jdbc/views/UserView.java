@@ -5,13 +5,25 @@ import mini.jdbc.controllers.UserController;
 import mini.jdbc.utils.InputUtil;
 
 public class UserView {
-    UserController userController = new UserController();
+    private final UserController userController;
+    public UserView(UserController userController) {
+        this.userController = userController;
+    }
 
     public void getUserSignup(){
         String username = InputUtil.readString("아이디");
-        String password = InputUtil.readString("비밀번호");
-        String confirmPassword = InputUtil.readString("비밀번호 확인");
+        if(username.length() < 3){
+            System.out.println("[알림] 아이디는 최소 3글자 이상이어야 합니다.");
+        }
+        String password = InputUtil.readPassword("비밀번호");
+        if(username.length() < 5){
+            System.out.println("[알림] 비밀번호는 최소 5글자 이상이어야 합니다.");
+        }
+        String confirmPassword = InputUtil.readPassword("비밀번호 확인");
         double balance = InputUtil.readDouble("잔고 설정");
+        if(balance < 0){
+            System.out.println("[알림] 잔고는 음수가 될 수 없습니다.");
+        }
         if (password.equals(confirmPassword)) {
             userController.getUserSignup(username, password, balance);
         } else {
@@ -20,7 +32,7 @@ public class UserView {
     }
     public void getUserLogin(){
         String username = InputUtil.readString("아이디를 입력하세요");
-        String password = InputUtil.readString("비밀번호를 입력하세요");
+        String password = InputUtil.readPassword("비밀번호를 입력하세요");
         userController.getUserLogin(username, password);
     }
     public void logout(){
@@ -44,18 +56,30 @@ public class UserView {
                 userController.updateUserName(changeName);
                 break;
             case 2:
-                String currentPassword = InputUtil.readString("현재 비밀번호");
-                String changePassword = InputUtil.readString("바꿀 비밀번호");
+                String currentPassword = InputUtil.readPassword("현재 비밀번호");
+                String changePassword = InputUtil.readPassword("바꿀 비밀번호");
                 userController.updateUserPassword(currentPassword, changePassword);
                 break;
             case 3:
-                int balanceOption = InputUtil.readInt("1.입금 | 2.출금");
+                int balanceOption;
+                while (true) {
+                    balanceOption = InputUtil.readInt("1.입금 | 2.출금 | 3.취소");
+                    if (balanceOption == 1 ||  balanceOption == 2 || balanceOption == 3) break;
+                    System.out.println("[ 오류 ] 1, 2, 3 중에 하나를 입력하세요");
+                }
                 double amount = InputUtil.readDouble("금액을 입력하세요");
+
+                if(amount <= 0){
+                    System.out.println("[ 오류 ] 0원 이하의 금액은 입력할 수 없습니다.");
+                }
+
                 if (balanceOption == 2) amount = -amount;
                 userController.updateBalance(amount);
+
+                if (balanceOption == 3) break;
                 break;
             case 4:
-                String checkPassword = InputUtil.readString("탈퇴 확인을 위해 비밀번호를 입력해주세요");
+                String checkPassword = InputUtil.readPassword("탈퇴 확인을 위해 비밀번호를 입력해주세요");
                 userController.signOut(checkPassword);
                 break;
             case 5:

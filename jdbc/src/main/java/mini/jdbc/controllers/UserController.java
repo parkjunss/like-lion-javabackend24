@@ -5,8 +5,14 @@ import mini.jdbc.services.UserService;
 import mini.jdbc.utils.SessionManager;
 
 public class UserController {
-    private final SessionManager sessionManager = SessionManager.getInstance();
-    UserService userService = new UserService();
+
+    private final SessionManager sessionManager;
+    private final UserService userService;
+
+    public UserController(UserService userService, SessionManager sessionManager) {
+        this.userService = userService;
+        this.sessionManager = sessionManager;
+    }
 
     public void getUserLogin(String username, String password) {
         UserDTO loginUser = new UserDTO();
