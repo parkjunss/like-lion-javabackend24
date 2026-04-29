@@ -6,17 +6,15 @@ import java.util.List;
 
 public class SimpleMemo {
 
-    public boolean WriteFile(String fileName, BufferedReader reader) {
+    public void WriteFile(String fileName, BufferedReader reader) {
         try(PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(fileName)))) {
             System.out.println("Write contents");
             String content;
             while ((content = reader.readLine()) != null && !content.isEmpty()) {
                 writer.write(content + "\n");
             }
-            return true;
         } catch (Exception e){
             e.printStackTrace();
-            return false;
         }
     }
 
