@@ -14,7 +14,7 @@ interface StringProcessor {
 
 // 매개변수가 두 개인 함수적 인터페이스
 @FunctionalInterface
-interface Calculator {
+interface Calculator1 {
     double calculate(double a, double b);
 }
 
@@ -29,18 +29,18 @@ public class LambdaExamples {
         System.out.println(upperCase.process("hello")); // HELLO
 
         // 매개변수 두 개인 람다식
-        Calculator multiply = (a, b) -> a * b;
+        Calculator1 multiply = (a, b) -> a * b;
         System.out.println(multiply.calculate(5.0, 3.0)); // 15.0
 
         // 복잡한 로직을 가진 람다식
-        Calculator complexCalc = (a, b) -> {
+        Calculator1 complexCalc = (a, b) -> {
             double result = a + b;
             System.out.println("계산 중: " + a + " + " + b);
             return result;
         };
         System.out.println(complexCalc.calculate(10.0, 20.0)); // 30.0
 
-        Calculator divide = (a, b) -> a / b;
+        Calculator1 divide = (a, b) -> a / b;
         System.out.println(divide.calculate(10.0, 20.0));
 
 

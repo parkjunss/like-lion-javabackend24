@@ -359,3 +359,36 @@
 *(강의 마무리 및 당부사항)*
 - **실습 권장:** 오늘 배운 내용을 바탕으로 (1) 계산기 만들기, (2) 학생 성적 처리 등 지난 시간의 실습 문제들을 다시 한번 구현해 보며 기본기를 다지는 것이 좋다.
 - **학습 자세:** 정답 코드와 똑같이 작성하는 것이 목표가 아니므로, 직접 코드를 구현해 보며 논리를 이해하는 것이 가장 중요하다.
+
+
+
+// 실습문제풀기
+
+// 1.계산기
+// 처음에 calc 안 쓰고 calculate 해서 에러 뜸
+return calc.calculate(a, b);
+
+// 2.학생
+// map 으로 하려고 했는데 average 메서드가 적용이 안돼서 mapToDouble로 바꿈
+// map은 그냥 stream 반환 mapToDouble은 DoubleStream 반환
+double average = students.stream()
+                .mapToDouble(Student::getScore)
+                .average()
+                .orElse(0);
+
+// 3.문자변환
+// str -> str.toUpperCase() == String::toUpperCase
+// 타입::메서드
+Function<String, String> toUpperCase = String::toUpperCase;
+Function<String, String> toLowerCase = String::toLowerCase;
+
+//String으로 하려고 했는데 StringBuilder를 추천함 불변성 때문에
+Function<String, String> reverse = (String str) -> {
+    StringBuilder reversed = new StringBuilder();
+    for (int i = str.length() - 1; i >= 0; i--) {
+        reversed.append(str.charAt(i));
+    }
+    return reversed.toString();
+};
+    
+
